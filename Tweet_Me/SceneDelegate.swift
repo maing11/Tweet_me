@@ -20,9 +20,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let logInVC = LoginController()
 //        let logInNav = UINavigationController(rootViewController: logInVC)
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = UINavigationController(rootViewController: LoginController())
+        window?.rootViewController = MainTapController()
         window?.makeKeyAndVisible()
-        
+        // UINavigationController(rootViewController: LoginController())
+        // MainTapController()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
