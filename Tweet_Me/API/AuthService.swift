@@ -10,7 +10,7 @@ import Firebase
 
 struct AuthCredentials {
     let email: String
-    let  password: String
+    let password: String
     let fullname: String
     let username: String
     let profileImage: UIImage
@@ -54,7 +54,7 @@ struct AuthService {
                         // Create our data dictionary
                         let values = ["email": email,
                                       "password": password,
-                                      "userName":username,
+                                      "username":username,
                                       "fullname": fullname,
                                       "profileImageUrl": profileImageUrl]
                         

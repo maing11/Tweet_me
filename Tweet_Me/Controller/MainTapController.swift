@@ -10,6 +10,16 @@ import Firebase
 
 class MainTapController: UITabBarController {
     
+    // Creat user variable and then once that variable gets set 
+    var user: User? {
+    // Pass this user from the MainTabController to FeedController
+        didSet{
+            guard let nav = viewControllers?[0] as? UINavigationController  else {return}
+            //We get feed by looking at the navigationController , list of viewControllers and grab the first one
+            guard let feed = nav.viewControllers.first as? FeedController else {return}
+            feed.user = user
+        }
+    }
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
@@ -27,6 +37,12 @@ class MainTapController: UITabBarController {
     }
     
     // MARK: - API
+    
+    func fetchUser(){
+        UserService.shared.fetchUser { (user) in
+            self.user = user
+        }
+    }
     // Use this func to check and make sure user logged in
     func authenticateUserAndConfigureUI() {
         if Auth.auth().currentUser == nil {
@@ -38,6 +54,8 @@ class MainTapController: UITabBarController {
         } else {
             configureViewController()
             configureUI()
+            fetchUser()
+
         }
     }
     
