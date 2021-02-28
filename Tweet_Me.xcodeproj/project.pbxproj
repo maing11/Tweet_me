@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		60A94BE2F687F17384B823BF /* Pods_Tweet_Me.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCFB1334ADE752F27477EA06 /* Pods_Tweet_Me.framework */; };
+		CA6C466125EB04C80001E863 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6C466025EB04C80001E863 /* UserService.swift */; };
+		CA6C466425EB12BD0001E863 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6C466325EB12BD0001E863 /* User.swift */; };
 		CA7547F325E9C39400B997DF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CA7547F225E9C39400B997DF /* GoogleService-Info.plist */; };
 		CAA466B325E9FCB50052BBD5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA466B225E9FCB50052BBD5 /* Constants.swift */; };
 		CAA466B625EA24370052BBD5 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA466B525EA24370052BBD5 /* AuthService.swift */; };
@@ -30,6 +32,8 @@
 
 /* Begin PBXFileReference section */
 		43FB7BEDF8FE98D53089CF0B /* Pods-Tweet_Me.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tweet_Me.debug.xcconfig"; path = "Target Support Files/Pods-Tweet_Me/Pods-Tweet_Me.debug.xcconfig"; sourceTree = "<group>"; };
+		CA6C466025EB04C80001E863 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		CA6C466325EB12BD0001E863 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = User.swift; path = Tweet_Me/API/User.swift; sourceTree = SOURCE_ROOT; };
 		CA7547F225E9C39400B997DF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CAA466B225E9FCB50052BBD5 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		CAA466B525EA24370052BBD5 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
@@ -152,6 +156,7 @@
 		CAB86A4F25E5C0C00050D6A2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				CA6C466325EB12BD0001E863 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -160,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				CAA466B525EA24370052BBD5 /* AuthService.swift */,
+				CA6C466025EB04C80001E863 /* UserService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -302,6 +308,7 @@
 				CAB86A6725E6173E0050D6A2 /* Extensions.swift in Sources */,
 				CAB86A3B25E5BFF00050D6A2 /* ViewController.swift in Sources */,
 				CAB86A6425E5C51D0050D6A2 /* ConversationsController.swift in Sources */,
+				CA6C466425EB12BD0001E863 /* User.swift in Sources */,
 				CAB86A5B25E5C4640050D6A2 /* FeedController.swift in Sources */,
 				CAB86A3725E5BFF00050D6A2 /* AppDelegate.swift in Sources */,
 				CAB86A7225E6D6800050D6A2 /* Utilities.swift in Sources */,
@@ -309,6 +316,7 @@
 				CAB86A6E25E6254D0050D6A2 /* RegistrationController.swift in Sources */,
 				CAB86A6125E5C5060050D6A2 /* NotificationsController.swift in Sources */,
 				CAB86A6B25E624AB0050D6A2 /* LogginController.swift in Sources */,
+				CA6C466125EB04C80001E863 /* UserService.swift in Sources */,
 				CAB86A3925E5BFF00050D6A2 /* SceneDelegate.swift in Sources */,
 				CAB86A5E25E5C4CF0050D6A2 /* ExploreController.swift in Sources */,
 				CAA466B625EA24370052BBD5 /* AuthService.swift in Sources */,

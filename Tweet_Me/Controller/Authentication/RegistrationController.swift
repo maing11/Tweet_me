@@ -46,7 +46,7 @@ class RegistrationController: UIViewController {
     
     private lazy var userNameContainerView: UIView = {
         let image = #imageLiteral(resourceName: "ic_person_outline_white_2x")
-        let view = Utilities().inputContainerView(withImage: image, textField: userNameTextField)
+        let view = Utilities().inputContainerView(withImage: image, textField: usernameTextField)
         
         return view
     }()
@@ -71,7 +71,7 @@ class RegistrationController: UIViewController {
         return tf
     }()
     
-    private let userNameTextField: UITextField = {
+    private let usernameTextField: UITextField = {
         let tf = Utilities().textField(withPlaceholder: "Username")
         
         return tf
@@ -121,7 +121,7 @@ class RegistrationController: UIViewController {
         guard let email = emailTextField.text else {return}
         guard let password = passwordTextField.text else {return}
         guard let fullname = fullNameTextField.text else {return}
-        guard let username  = userNameTextField.text else {return}
+        guard let username  = usernameTextField.text else {return}
         
         
         let credentials = AuthCredentials(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage)
