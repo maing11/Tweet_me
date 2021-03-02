@@ -2,18 +2,18 @@
 //  UserService.swift
 //  Tweet_Me
 //
-//  Created by mai ng on 2/27/21.
+//  Created by mai ng on 3/1/21.
 //
 
 import Firebase
 
+
+
 struct UserService {
     static let shared = UserService()
     
-    func fetchUser(completion: @escaping(User) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {return}
-        
-        
+    func fetchUser(uid: String,completion: @escaping(User) -> Void) {
+            
         REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
             // Cache this information from snapshots value as a dictionary
             guard let dictionary = snapshot.value as? [String:AnyObject] else {return}
@@ -34,3 +34,4 @@ struct UserService {
         
     }
 }
+
