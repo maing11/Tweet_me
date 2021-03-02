@@ -17,16 +17,18 @@ class MainTapController: UITabBarController {
             guard let nav = viewControllers?[0] as? UINavigationController  else {return}
             //We get feed by looking at the navigationController , list of viewControllers and grab the first one
             guard let feed = nav.viewControllers.first as? FeedController else {return}
+            
             feed.user = user
         }
     }
+    
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
         //Color customize
         button.backgroundColor = .twitterBlue
         button.setImage(UIImage(named: "new_tweet"), for: .normal)
-        button.addTarget(self, action: #selector(actionbuttonTapped), for: .touchUpInside)
+          button.addTarget(self, action: #selector(actionbuttonTapped), for: .touchUpInside)
         return button
     }()
     override func viewDidLoad() {
@@ -72,7 +74,11 @@ class MainTapController: UITabBarController {
     // MARK: - Selectors
     
     @objc func actionbuttonTapped() {
-        print("123")
+        guard let user = user else {return}
+        let controller = UploadTweetController(user: user)
+        let nav = UINavigationController(rootViewController:controller)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true, completion: nil)
     }
     
     
