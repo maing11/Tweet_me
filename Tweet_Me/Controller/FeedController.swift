@@ -8,31 +8,53 @@
 import UIKit
 import SDWebImage
 
-class FeedController: UIViewController {
+private let reuseIdentifier = "TweetCell"
+
+class FeedController: UICollectionViewController {
     
     
     var user: User? {
         // Use the user to set our profileImageUrl
         // When this function gets called WE know that the user is exist
-        didSet{
-            configureLeftBarButton()        }
+        didSet{configureLeftBarButton()  }
     }
+    
+    // Create level variable . We can access in tweets arrray any where insise of this class
+    private var tweets = [Tweet]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        fetchTweet()
         
     }
     
+    //MARK: - API
     
+    func fetchTweet()  {
+        //Using this tweet array that we got back from our data fetch, to populate collection view
+        TweetService.shared.fetchTweets { (tweets) in
+            self.tweets = tweets
+        }
+    }
+    
+    //MARK: - Helpers
     func configureUI() {
         view.backgroundColor = .white
+        //Register this Tweetcell and pass this reuse identifier
+        collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.backgroundColor = .white
         let imageView  = UIImageView(image: UIImage(named: "tweetme_logo_blue"))
         imageView.contentMode = .scaleAspectFit
         imageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
         navigationItem.titleView = imageView
-        
-        
        
     }
     
@@ -55,4 +77,33 @@ class FeedController: UIViewController {
 
     }
     
+}
+
+
+// MARK: UICollectionViewDelegate/DataSource
+extension FeedController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return tweets.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)
+        as! TweetCell
+        // We use this indexPath to access the element we want from the tweets datasource array
+        cell.tweet = tweets[indexPath.row]
+        return cell
+    }
+}
+
+
+//MARK: UICollectionViewDelegateFLowLayout
+
+extension FeedController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: 120)
+    }
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        
+//    }
 }
