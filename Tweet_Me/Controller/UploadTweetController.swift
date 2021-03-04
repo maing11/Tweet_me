@@ -105,10 +105,19 @@ class UploadTweetController: UIViewController {
         stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         stack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         stack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
+        
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-        profileImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant:16).isActive = true
         profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
+//
+//        captionTextView.textContainer.maximumNumberOfLines = 0
+//        captionTextView.translatesAutoresizingMaskIntoConstraints = false
+//        captionTextView.textContainer.lineBreakMode = .byWordWrapping
+//        captionTextView.isScrollEnabled = false
+       
+        
+        
         
     }
     

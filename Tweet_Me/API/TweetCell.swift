@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TweetCellDelegate: class {
+    func handleProfileImageTapped(_ cell: TweetCell)
+
+}
 
 class TweetCell: UICollectionViewCell {
     
@@ -17,7 +21,10 @@ class TweetCell: UICollectionViewCell {
         }
     }
     
-    private let profileImageView: UIImageView = {
+    // Delegate var it conform to that protocol and give us access to handleProfileImageTapped func
+    weak var delegate: TweetCellDelegate?
+    
+    private lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
@@ -25,7 +32,10 @@ class TweetCell: UICollectionViewCell {
         iv.widthAnchor.constraint(equalToConstant: 48).isActive = true
         iv.layer.cornerRadius = 48/2
         iv.backgroundColor = .twitterBlue
-
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+        iv.addGestureRecognizer(tap)
+        iv.isUserInteractionEnabled  = true
         return iv
     }()
     
@@ -88,11 +98,7 @@ class TweetCell: UICollectionViewCell {
     
     
     private let infoLabel = UILabel()
-    
-    
-    
-    
-    
+
     // MARK: - Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -115,7 +121,7 @@ class TweetCell: UICollectionViewCell {
         stack.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
         
         infoLabel.font = UIFont.systemFont(ofSize: 14)
-//        infoLabel.text = "Mie Ng @mieng"
+        infoLabel.text = "Mie Ng @mieng"
         
         
         let actionStack = UIStackView(arrangedSubviews: [commentButton,retweetButton,likeButton,shareButton])
@@ -144,22 +150,23 @@ class TweetCell: UICollectionViewCell {
     
     // MARK: - Selectors
     
+    @objc func handleProfileImageTapped(){
+        delegate?.handleProfileImageTapped(self)
+     
+    }
+    
     @objc func handleCommentTapped() {
         
     }
     
-    
-    @objc func handleRetweetTapped() {
+   @objc func handleRetweetTapped() {
         
     }
-    
-    
+ 
     @objc func handleLikeTapped() {
         
     }
-    
-    
-    
+
     @objc func handleShareTapped() {
         
     }
