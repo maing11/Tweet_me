@@ -22,14 +22,11 @@ struct UserService {
             
             let user = User(uid: uid, dictionary: dictionary)
             
-            print("DEBUG: Username is \(user.username)")
-            print("DEBUG: Username is \(user.fullname)")
+//            print("DEBUG: Username is \(user.username)")
+//            print("DEBUG: Username is \(user.fullname)")
             completion(user)
             
             
-            
-//            let user = User(fullname: <#String#>, email: <#String#>, username: username, profileImageUrl: <#String#>, uid: <#String#>)
-        
         }
         
     }

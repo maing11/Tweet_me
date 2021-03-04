@@ -34,6 +34,12 @@ class FeedController: UICollectionViewController {
         fetchTweet()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.isHidden = false
+
+    }
     
     //MARK: - API
     
@@ -89,10 +95,20 @@ extension FeedController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)
         as! TweetCell
+        
+        cell.delegate = self
         // We use this indexPath to access the element we want from the tweets datasource array
         cell.tweet = tweets[indexPath.row]
+        
         return cell
     }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let controller = ProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+//        navigationController?.pushViewController(controller, animated: true)
+        
+        
+    }
+    
 }
 
 
@@ -103,7 +119,15 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 120)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        
-//    }
 }
+
+
+extension FeedController: TweetCellDelegate {
+    func handleProfileImageTapped(_ cell: TweetCell) {
+        guard let user = cell.tweet?.user else {return}
+        let controller = ProfileController(user: user )
+        navigationController?.pushViewController(controller, animated: true)
+    }
+   
+}
+

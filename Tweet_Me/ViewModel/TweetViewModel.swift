@@ -27,10 +27,9 @@ struct TweetViewModel {
         var userInfoText: NSAttributedString {
             let title = NSMutableAttributedString(string: user.fullname, attributes:[.font: UIFont.boldSystemFont(ofSize: 14)])
             
-            title.append(NSAttributedString(string: "@\(user.username)", attributes: [.font: UIFont.systemFont(ofSize: 14),.foregroundColor: UIColor.lightGray]))
+            title.append(NSAttributedString(string: " @\(user.username)", attributes: [.font: UIFont.systemFont(ofSize: 14),.foregroundColor: UIColor.lightGray]))
             
             title.append(NSAttributedString(string: "・ \(timestamp)",attributes: [.font: UIFont.systemFont(ofSize: 14), .foregroundColor: UIColor.lightGray]))
-            print("DEBUG: Date of tweet is \(timestamp) ")
 
             return title
         }
