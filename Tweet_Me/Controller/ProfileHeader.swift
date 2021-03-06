@@ -10,6 +10,7 @@ import UIKit
 
 protocol ProfileHeaderDelegate: class {
     func handleDissmissal()
+    func handleEditProfileFollow(_ header: ProfileHeader)
 }
 class ProfileHeader: UICollectionReusableView {
     
@@ -56,7 +57,7 @@ class ProfileHeader: UICollectionReusableView {
         
     }()
     
-    private lazy var editProfileImageEditButton: UIButton = {
+     lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Loading", for: .normal)
         button.layer.borderColor = UIColor.twitterBlue.cgColor
@@ -145,13 +146,13 @@ class ProfileHeader: UICollectionReusableView {
         profileImageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
         profileImageView.layer.cornerRadius = 80 / 2
         
-        addSubview(editProfileImageEditButton)
-        editProfileImageEditButton.translatesAutoresizingMaskIntoConstraints = false
-        editProfileImageEditButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
-        editProfileImageEditButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
-        editProfileImageEditButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        editProfileImageEditButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
-        editProfileImageEditButton.layer.cornerRadius = 36/2
+        addSubview(editProfileFollowButton)
+        editProfileFollowButton.translatesAutoresizingMaskIntoConstraints = false
+        editProfileFollowButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 12).isActive = true
+        editProfileFollowButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+        editProfileFollowButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        editProfileFollowButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        editProfileFollowButton.layer.cornerRadius = 36/2
         
         let userDetailsStack = UIStackView(arrangedSubviews: [fullnameLabel,usernameLabel,bioLabel])
         userDetailsStack.axis = .vertical
@@ -205,7 +206,7 @@ class ProfileHeader: UICollectionReusableView {
     }
     
     @objc func handleEditProfileFollow() {
-        
+        delegate?.handleEditProfileFollow(self)
     }
     
     @objc func handleFollwersTap(){
@@ -217,11 +218,13 @@ class ProfileHeader: UICollectionReusableView {
     
     func configure() {
         guard let user = user else {return }
+        print("DEBUG: Did set called for user in profile header")
+        
         let viewModel = ProfileHeaderViewModel(user: user)
 
         profileImageView.sd_setImage(with: user.profileImageUrl)
         
-        editProfileImageEditButton.setTitle((viewModel.actionButtonTitle), for: .normal)
+        editProfileFollowButton.setTitle((viewModel.actionButtonTitle), for: .normal)
         followingLabel.attributedText = viewModel.followingString
         followersLabel.attributedText = viewModel.followersString
         
