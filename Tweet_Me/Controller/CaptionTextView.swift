@@ -15,7 +15,7 @@ class CaptionTextView:UITextView{
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .darkGray
         label.text = "What's happening ?"
-        return label
+        return label 
     }()
     
     
@@ -23,10 +23,10 @@ class CaptionTextView:UITextView{
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         // Because CaptionTextView is already subclass of UIView
-        backgroundColor = .red
+        backgroundColor = .blue
         font = UIFont.systemFont(ofSize: 16)
         isScrollEnabled = false
-        heightAnchor.constraint(equalToConstant: 300).isActive = true
+        heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         addSubview(placeHolderLabel)
         placeHolderLabel.translatesAutoresizingMaskIntoConstraints = false
