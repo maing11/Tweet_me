@@ -7,11 +7,16 @@
 
 import UIKit
 
+
 class UploadTweetController: UIViewController {
+    // MARK: - Propertie
     
-    // MARK: - Properties
     // Makr this level variable because We need to access it outside this intitialize
     private let user: User
+    private let config: UploadTweetConfiguration
+    private lazy var viewModel = UploadTweetViewModel(config: config)
+    // lazy var because this config hasn't necessarily been set yet once we try to instantiate the viewModel with that config
+
     
     
     //Only load this button when we try to access it
@@ -45,12 +50,23 @@ class UploadTweetController: UIViewController {
     }()
     
     
+    private lazy var replyLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor  = UIColor.lightGray
+        label.text = "replying to @pikachu"
+        label.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        return label
+    }()
+    
+    
     private let captionTextView = CaptionTextView()
     //MARK: - Lifecycle
     
-    init(user: User) {
+    init(user: User,config: UploadTweetConfiguration) {
         // Use this user to populate our user interface with some data about that user
         self.user = user
+        self.config = config
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -63,7 +79,6 @@ class UploadTweetController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        print("DEBUG: User is \(user.username)")
         
     }
     
@@ -71,13 +86,12 @@ class UploadTweetController: UIViewController {
     @objc func handleCanceled(){
         dismiss(animated: true, completion: nil)
 
-      
     }
     
     
     @objc func handleUploadTweet() {
         guard let caption = captionTextView.text else{return}
-        TweetService.shared.uploadTweet(caption:caption) { (error, ref) in
+        TweetService.shared.uploadTweet(caption:caption, type: config) { (error, ref) in
             print("DEBUG: - Tweet did upload to database")
 
             if let error = error {
@@ -95,10 +109,16 @@ class UploadTweetController: UIViewController {
         configureNavigationBar()
         
         // Using Stack to add a bunhc of Subvies a lot easier
-        let stack = UIStackView(arrangedSubviews: [profileImageView,captionTextView])
-        stack.axis = .horizontal
-        stack.spacing = 12
+        let imageCaptionStack = UIStackView(arrangedSubviews: [profileImageView,captionTextView])
+        imageCaptionStack.axis = .horizontal
+        imageCaptionStack.spacing = 12
+        imageCaptionStack.alignment = .leading
         
+        let stack = UIStackView(arrangedSubviews: [replyLabel,imageCaptionStack])
+        stack.axis = .vertical
+//        stack.alignment = .leading
+        stack.spacing = 12
+    
         
         view.addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -106,23 +126,24 @@ class UploadTweetController: UIViewController {
         stack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         stack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-        profileImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant:16).isActive = true
+//        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+//        profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+//        profileImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant:16).isActive = true
         profileImageView.sd_setImage(with: user.profileImageUrl, completed: nil)
-//
-//        captionTextView.textContainer.maximumNumberOfLines = 0
-//        captionTextView.translatesAutoresizingMaskIntoConstraints = false
-//        captionTextView.textContainer.lineBreakMode = .byWordWrapping
-//        captionTextView.isScrollEnabled = false
-       
+
+        actionButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        captionTextView.placeHolderLabel.text = viewModel.placeholderText
         
+        replyLabel.isHidden = !viewModel.shouldShowReplyLabel
+        guard let replyText = viewModel.replyText else {return}
+        replyLabel.text = replyText
         
         
     }
     
-    
-    
+//    func configureUIComponents() {
+        
+//    }
     
     func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .white
