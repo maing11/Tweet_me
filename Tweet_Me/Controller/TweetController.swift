@@ -11,8 +11,11 @@ private let reuseIdentifier = "TweetCell"
 private let headerIdentifier = "TweetHeader"
 
 class TweetController: UICollectionViewController {
+    
     // MARK: - Properties
-    private var tweet: Tweet
+    private let  tweet: Tweet
+    private var actionSheetLaucher: ActionSheetLaucher!
+    
     private var replies = [Tweet]() {
         didSet {
             collectionView.reloadData()
@@ -44,6 +47,13 @@ class TweetController: UICollectionViewController {
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.register(TweetHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
     }
+    
+    fileprivate func showActionSheet(forUser user: User) {
+        actionSheetLaucher = ActionSheetLaucher(user: user)
+        actionSheetLaucher.delegate = self
+        actionSheetLaucher.show()
+    }
+    
     
     // MARK: - API
     
@@ -77,6 +87,7 @@ override func collectionView(_ collectionView: UICollectionView, viewForSuppleme
     let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as! TweetHeader
     
     header.tweet = tweet
+    header.delegate = self
     return header
 }
 }
@@ -96,4 +107,49 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: view.frame.width, height: 120)
     }
     
+}
+
+
+// MARK: - TweetHeaderDelegate
+
+extension TweetController: TweetHeaderDelegate {
+    func showActionSheet( ) {
+        if tweet.user.isCurrentUser {
+            showActionSheet(forUser :tweet.user)
+
+        } else {
+            // Make this API call to figure out whether  or not our user is followed and then initialize this ActionSheetLaucher with the correct user property
+            UserService.shared.checkIfUserIsFollowed(uid: tweet.user.uid) { [self]
+                (isFollowed) in
+                var user = self.tweet.user
+                user.isFollowed = isFollowed
+                self.showActionSheet(forUser: user)
+                
+            }
+        }
+    }
+}
+
+// MARK: - ActionSheetLaucherDelegate
+
+extension TweetController: ActionSheetLaucherDelegate {
+    func didSelect(option: ActionSheetOptions) {
+//        print("DEBUG: Option in controller is  \(option.description)")
+        switch option{
+        case .follow(let user):
+            UserService.shared.followUser(uid: user.uid) { (err, ref) in
+                print("DEBUG: Did follow user  \(user.username)")
+            }
+        case .unfollow(let user):
+            UserService.shared.unfollowUser(uid: user.uid) { (err, ref) in
+                print("DEBUG: Did unfollow user  \(user.username)")
+            }
+        case .report:
+            print("DEBUG: Report tweet")
+        case .delete:
+            print("DEBUG: Delete tweet")
+        
+        }
+    }
+
 }
