@@ -145,7 +145,7 @@ extension ProfileController: ProfileHeaderDelegate {
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { (ref, err) in
                 self.user.isFollowed = false
-                //                header.editProfileFollowButton.setTitle("Follow", for: .normal)
+    
             }
             
         } else {

@@ -47,6 +47,19 @@ class FeedController: UICollectionViewController {
         //Using this tweet array that we got back from our data fetch, to populate collection view
         TweetService.shared.fetchTweets { (tweets) in
             self.tweets = tweets
+            self.checkIfUserLikedTweets(self.tweets)
+
+    }
+}
+    
+    func checkIfUserLikedTweets(_ tweets: [Tweet]) {
+        // Get access to the index that you are one of each iteration of your for loop
+        for (index, tweet) in tweets.enumerated() {
+            TweetService.shared.checkIfUserLikeTweet(tweet) { (didLike) in
+                guard didLike == true else {return}
+                
+                self.tweets[index].didLike = true
+            }
         }
     }
     
@@ -130,6 +143,21 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
  
 
 extension FeedController: TweetCellDelegate {
+    func handleLikeTapped(_ cell: TweetCell) {
+        // Unwrap this guy so can pass it below
+        guard let tweet = cell.tweet else {return }
+        
+        TweetService.shared.likeTweet(tweet: tweet) { (err, ref) in
+            // Update the object on the cell
+            cell.tweet?.didLike.toggle()
+            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+            // And set the likes property in the cell
+            cell.tweet?.likes = likes
+            
+        }
+       
+    }
+    
     func handleReplyTapped(_ cell: TweetCell) {
         guard let tweet = cell.tweet else {return}
         let controller = UploadTweetController(user: tweet.user, config:.reply(tweet))
