@@ -218,7 +218,7 @@ class ProfileHeader: UICollectionReusableView {
     
     func configure() {
         guard let user = user else {return }
-        print("DEBUG: Did set called for user in profile header")
+//        print("DEBUG: Did set called for user in profile header")
         
         let viewModel = ProfileHeaderViewModel(user: user)
 
@@ -243,7 +243,6 @@ extension ProfileHeader: ProfileFilterViewDelegate {
         guard  let cell = view.collectionView.cellForItem(at: indexPath) as? ProfileFilterCell else {return}
         
         let xPosition = cell.frame.origin.x
-        print(xPosition)
         UIView.animate(withDuration: 0.3){
             self.underLineView.frame.origin.x = xPosition
         }

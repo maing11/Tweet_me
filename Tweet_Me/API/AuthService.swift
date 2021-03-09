@@ -65,11 +65,7 @@ struct AuthService {
                     //Update the childValues with new information
                     
                     REF_USERS.child(uid).updateChildValues(values, withCompletionBlock:completion)
-                    
-                    
-                    //                    REF_USERS.child(uid).updateChildValues(values) {(erro,ref) in
-                    //                        print("DEBUG:/ Successfully update user information")
-                    
+                
                 }
                 
             }

@@ -108,7 +108,6 @@ class RegistrationController: UIViewController {
     
     @objc func handleAddProfilePhoto() {
         //        navigationController?.popViewController(animated: true)
-        print("...")
         ImagePicker.sourceType = .photoLibrary
         present(ImagePicker, animated: true, completion: nil)
         
@@ -127,8 +126,7 @@ class RegistrationController: UIViewController {
         let credentials = AuthCredentials(email: email, password: password, fullname: fullname, username: username, profileImage: profileImage)
         
         AuthService.shared.registerUser(credentials: credentials){(error, ref) in
-//            print("DEBUG: sign up successful..")
-//            print("DEBUG: Handle update user interface here")
+
             guard let windown = UIApplication.shared.windows.first(where: { $0.isKeyWindow}) else {return}
             
             guard let tab = windown.rootViewController as? MainTapController else {return}

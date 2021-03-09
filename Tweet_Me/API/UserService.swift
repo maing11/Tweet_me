@@ -20,8 +20,6 @@ struct UserService {
             
             guard let username = dictionary["username"] as? String else {return}
             let user = User(uid: uid, dictionary: dictionary)
-//            print("DEBUG: Username is \(user.username)")
-//            print("DEBUG: Username is \(user.fullname)")
             completion(user)
             
             
