@@ -41,7 +41,7 @@ struct TweetService {
     // This function should give us back an array of tweets
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
-    
+
         REF_TWEETS.observe(.childAdded){(snapshot) in
             print("DEBUG: Snapshot is \(snapshot.value)")
             guard let dictionary = snapshot.value as? [String:Any] else {return}
@@ -49,41 +49,44 @@ struct TweetService {
             guard let uid = dictionary["uid"] as? String else {return}
             // Access TweetID
             let tweetID = snapshot.key
-            
+
             // Pass the uid in this func when we want fetch the user
             UserService.shared.fetchUser(uid: uid) { (user) in
                 let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
-                           tweets.append(tweet)
-                           completion(tweets)
-                           
+                        tweets.append(tweet)
+                        completion(tweets)
             }
-            
+
         }
     }
     //This function to give use back an array of tweets
     // And use that to populate our user profile controller with that array -> Datatsourse
-    func fetchTweet(forUser user: User, completion: @escaping([Tweet]) -> Void ) {
-        
+    func fetchTweets(forUser user: User, completion: @escaping([Tweet]) -> Void ) {
         var tweets = [Tweet]()
         
-        guard  let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
         REF_USER_TWEETS.child(user.uid).observe(.childAdded) { (snapshot) in
-           
             let tweetID = snapshot.key
-            // Get back Tweet structure and find TweetID and get all of the tweet data
-            REF_TWEETS.child(tweetID).observeSingleEvent(of: .value) { (snapshot) in
-                print(snapshot)
-                guard let dictionary = snapshot.value as? [String:Any] else {return}
-                guard let uid = dictionary["uid"] as? String else {return}
-              
-                // Pass the uid in this func when we want fetch the user
-                UserService.shared.fetchUser(uid: uid) { (user) in
-                    let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
-                    tweets.append(tweet)
-                    completion(tweets)
-                }
+            
+            self.fetchTweet(withTweetID: tweetID) { (tweet) in
+                tweets.append(tweet)
+                completion(tweets)
+            }
+        }
+    }
+    
+    
+    
+    
+    func fetchTweet(withTweetID tweetID: String, completion: @escaping(Tweet) -> Void ){
+        REF_TWEETS.child(tweetID).observeSingleEvent(of: .value) { (snapshot) in
+            print(snapshot)
+            guard let dictionary = snapshot.value as? [String:Any] else {return}
+            guard let uid = dictionary["uid"] as? String else {return}
+          
+            // Pass the uid in this func when we want fetch the user
+            UserService.shared.fetchUser(uid: uid) { (user) in
+                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
+               completion(tweet)
             }
         }
     }
