@@ -58,7 +58,7 @@ class ProfileController: UICollectionViewController {
     //MARK: - API
     
     func fetchTweets() {
-        TweetService.shared.fetchTweet(forUser: user) { tweets in
+        TweetService.shared.fetchTweets(forUser: user) { tweets in
             self.tweets = tweets
         }
     }
@@ -145,13 +145,17 @@ extension ProfileController: ProfileHeaderDelegate {
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { (ref, err) in
                 self.user.isFollowed = false
+                self.collectionView.reloadData()
     
             }
             
         } else {
             UserService.shared.followUser(uid: user.uid) { (err, ref) in
                 self.user.isFollowed = true
-                //                header.editProfileFollowButton.setTitle("Following", for: .normal)
+                self.collectionView.reloadData()
+                
+                NotificationService.shared.uploadNotification(type: .follow, user:self.user)
+               
             }
         }
     }

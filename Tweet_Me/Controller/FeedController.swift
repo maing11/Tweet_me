@@ -154,6 +154,9 @@ extension FeedController: TweetCellDelegate {
             // And set the likes property in the cell
             cell.tweet?.likes = likes
             
+            //Only upload the notification if tweet is being liked
+            guard !tweet.didLike else {return}
+            NotificationService.shared.uploadNotification(type: .like, tweet: tweet)
         }
        
     }
