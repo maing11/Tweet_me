@@ -43,6 +43,7 @@ class NotificationsController: UITableViewController {
     
     func fetchNotifications() {
         refreshControl?.beginRefreshing()
+        
         //After the fetch is completed we're going to stop refresh
         NotificationService.shared.fetchNotifications { (notifications) in
             self.refreshControl?.endRefreshing()

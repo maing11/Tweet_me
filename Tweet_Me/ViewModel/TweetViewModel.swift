@@ -10,6 +10,8 @@ import UIKit
 
 
 struct TweetViewModel {
+    // MARK: Properties
+    
     let tweet: Tweet
     let user: User
     var profileImageUrl: URL? {
@@ -65,6 +67,16 @@ struct TweetViewModel {
         return UIImage(named: imageName)!
     }
     
+    var shouldHideReplyLabel: Bool {
+        return !tweet.isReply
+    }
+    
+    var replyText: String? {
+        guard let replyingToUser = tweet.replyingTo else {return nil}
+        return "→ replying to @\(replyingToUser)"
+    }
+    
+    // MARK: - Lifecycle
     
     init(tweet: Tweet){
         self.tweet = tweet
@@ -79,6 +91,9 @@ struct TweetViewModel {
         return attributedTitle
     }
     
+    
+    // MARK: - Helpers
+//    
     func size( forWidth width: CGFloat) -> CGSize {
       let measurementLabel = UILabel()
         measurementLabel.text = tweet.caption

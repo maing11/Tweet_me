@@ -78,6 +78,7 @@ class TweetHeader: UICollectionReusableView {
         
     }()
     
+    
     private lazy var optionButton: UIButton = {
         let button = UIButton()
         button.tintColor = .lightGray
@@ -85,6 +86,15 @@ class TweetHeader: UICollectionReusableView {
         button.addTarget(self, action: #selector(showActionSheet), for: .touchUpInside)
         return button
     }()
+    
+    
+    private let replyLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        label.font = UIFont.systemFont(ofSize: 12)
+        return label
+    }()
+    
     
     private lazy var retweetLabel = UILabel()
 
@@ -179,8 +189,15 @@ class TweetHeader: UICollectionReusableView {
         labelStack.spacing = -6
 //        labelStack.distribution = .fillProportionally
         
-        let stack = UIStackView(arrangedSubviews: [profileImageView  , labelStack])
+        let imageCaptionStack  = UIStackView(arrangedSubviews: [profileImageView  , labelStack])
         labelStack.spacing = 12
+        
+        let stack = UIStackView(arrangedSubviews: [replyLabel,imageCaptionStack])
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.distribution = .fillProportionally
+        
+        
         
         addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -284,6 +301,10 @@ class TweetHeader: UICollectionReusableView {
         likeButton.setImage(viewModel.likeButonImage, for: .normal)
         likeButton.tintColor = viewModel.likeButttonTintColor
         
+        
+        
+        replyLabel.isHidden = viewModel.shouldHideReplyLabel
+        replyLabel.text = viewModel.replyText 
         
         
         
