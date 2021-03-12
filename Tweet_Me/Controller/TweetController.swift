@@ -21,7 +21,8 @@ class TweetController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
-    
+    // MARK: - Life Cycle
+
     init(tweet: Tweet) {
         self.tweet = tweet
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
@@ -31,7 +32,6 @@ class TweetController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +39,11 @@ class TweetController: UICollectionViewController {
         fetchReplies()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.barStyle = .default
+    }
     
     // MARK: - Helper
     func configureCollectionView() {
@@ -58,6 +63,8 @@ class TweetController: UICollectionViewController {
     // MARK: - API
     
     func fetchReplies() {
+        print("DEBUG: Tweet ID is \(tweet.tweetID)")
+        
         TweetService.shared.fetchReplies(forTweet: tweet) {replies in
             self.replies = replies
         }

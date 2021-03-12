@@ -11,6 +11,7 @@ import UIKit
 protocol ProfileHeaderDelegate: class {
     func handleDissmissal()
     func handleEditProfileFollow(_ header: ProfileHeader)
+    func didSelect(filter: ProfileFilterOption)
 }
 class ProfileHeader: UICollectionReusableView {
     
@@ -90,13 +91,7 @@ class ProfileHeader: UICollectionReusableView {
         label.text = "This is a user bio that will span more than one line for test purpose  "
         return label
     }()
-    private let underLineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .twitterBlue
-        return view
-        
-    }()
-    
+
     private let followingLabel: UILabel = {
         let label = UILabel()
         label.text = "0 Following"
@@ -184,15 +179,6 @@ class ProfileHeader: UICollectionReusableView {
         filterBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         
-        addSubview(underLineView)
-        underLineView.translatesAutoresizingMaskIntoConstraints = false
-        underLineView.bottomAnchor.constraint(equalTo:bottomAnchor).isActive = true
-        underLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        //        underLineView.rightAnchor.constraint(equalTo: rightAnchor).isActive =  true
-        underLineView.heightAnchor.constraint(equalToConstant: 2).isActive = true
-        underLineView.widthAnchor.constraint(equalToConstant: frame.width / 3).isActive = true
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -239,13 +225,12 @@ class ProfileHeader: UICollectionReusableView {
 // MARK: - ProfileFilterViewDelegate
 
 extension ProfileHeader: ProfileFilterViewDelegate {
-    func filterView(_ view: ProfileFilterView, didSelect indexPath: IndexPath) {
-        guard  let cell = view.collectionView.cellForItem(at: indexPath) as? ProfileFilterCell else {return}
+    func filterView(_ view: ProfileFilterView, didSelect index: Int) {
+        guard let filter = ProfileFilterOption(rawValue: index) else {return}
         
-        let xPosition = cell.frame.origin.x
-        UIView.animate(withDuration: 0.3){
-            self.underLineView.frame.origin.x = xPosition
-        }
+        delegate?.didSelect(filter: filter)
+        
     }
     
 }
+
