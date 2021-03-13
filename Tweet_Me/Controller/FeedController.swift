@@ -31,7 +31,7 @@ class FeedController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        fetchTweet()
+        fetchTweets()
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -41,24 +41,40 @@ class FeedController: UICollectionViewController {
 
     }
     
-    //MARK: - API
+    // MARK: - Selectors
+    @objc func handleRefresh() {
+        fetchTweets()
+    }
     
-    func fetchTweet()  {
+    
+    // MARK: - API
+    
+    func fetchTweets()  {
+        collectionView.refreshControl?.beginRefreshing()
+        
         //Using this tweet array that we got back from our data fetch, to populate collection view
         TweetService.shared.fetchTweets { (tweets) in
-            self.tweets = tweets
-            self.checkIfUserLikedTweets(self.tweets)
+            self.tweets = tweets.sorted(by: { $0.timestamp > $1.timestamp })
+            self.checkIfUserLikedTweets()
+            
+//            self.tweets = tweets.sorted(by: { (tweet1, tweet2) -> Bool in
+//                return tweet1.timestamp > tweet2.timestamp
+//            })
+//
+            self.collectionView.refreshControl?.endRefreshing()
 
     }
 }
     
-    func checkIfUserLikedTweets(_ tweets: [Tweet]) {
+    func checkIfUserLikedTweets() {
         // Get access to the index that you are one of each iteration of your for loop
-        for (index, tweet) in tweets.enumerated() {
+        self.tweets.forEach { (tweet) in
             TweetService.shared.checkIfUserLikeTweet(tweet) { (didLike) in
                 guard didLike == true else {return}
-                
-                self.tweets[index].didLike = true
+                // FIrst index allow us to get access to an index where a certain condition is met
+                if let index = self.tweets.firstIndex(where: {$0.tweetID == tweet.tweetID}) {
+                    self.tweets[index].didLike = true
+                }
             }
         }
     }
@@ -74,6 +90,11 @@ class FeedController: UICollectionViewController {
         imageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
         navigationItem.titleView = imageView
+        
+        
+        let refreshController = UIRefreshControl()
+        refreshController.addTarget(self, action:#selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refreshController
        
     }
     
