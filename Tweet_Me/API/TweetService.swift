@@ -26,7 +26,7 @@ struct TweetService {
         switch type {
         case .tweet:
             
-            REF_TWEETS.updateChildValues(values) { (err, ref) in
+            REF_TWEETS.childByAutoId().updateChildValues(values) { (err, ref) in
                 //Update user-tweet structure after tweet upload completes
                 guard let tweetID = ref.key else {return}
                 REF_USER_TWEETS.child(uid).updateChildValues([tweetID: 1], withCompletionBlock: completion)
@@ -49,23 +49,32 @@ struct TweetService {
     // This function should give us back an array of tweets
     func fetchTweets(completion: @escaping([Tweet]) -> Void) {
         var tweets = [Tweet]()
-
-        REF_TWEETS.observe(.childAdded){(snapshot) in
-            print("DEBUG: Snapshot is \(snapshot.value)")
-            guard let dictionary = snapshot.value as? [String:Any] else {return}
-            // We have to get this uid from dictionary
-            guard let uid = dictionary["uid"] as? String else {return}
-            // Access TweetID
-            let tweetID = snapshot.key
-
-            // Pass the uid in this func when we want fetch the user
-            UserService.shared.fetchUser(uid: uid) { (user) in
-                let tweet = Tweet(user: user, tweetID: tweetID, dictionary: dictionary)
-                        tweets.append(tweet)
-                        completion(tweets)
+        guard let currentUid = Auth.auth().currentUser?.uid else {return}
+        
+        REF_USER_FOLLOWING.child(currentUid).observe(.childAdded) { (snapshot) in
+            //use user id and take going to their user tweet structure
+            let followingUid = snapshot.key
+            
+            REF_USER_TWEETS.child(followingUid).observe(.childAdded) { (snapshot ) in
+                let tweetID = snapshot.key
+                
+                self.fetchTweet(withTweetID: tweetID) { (tweet) in
+                    tweets.append(tweet)
+                    completion(tweets)
+                    
+                }
             }
-
+            
         }
+        REF_USER_TWEETS.child(currentUid).observe(.childAdded) { (snapshot) in
+            let tweetID = snapshot.key
+            
+            self.fetchTweet(withTweetID: tweetID) { (tweet) in
+                tweets.append(tweet)
+                completion(tweets)
+            }
+        }
+        
     }
     //This function to give use back an array of tweets
     // And use that to populate our user profile controller with that array -> Datatsourse
@@ -81,7 +90,6 @@ struct TweetService {
             }
         }
     }
-    
     
     
     
