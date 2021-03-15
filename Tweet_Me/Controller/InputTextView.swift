@@ -8,7 +8,7 @@
 import UIKit
 
 // Create custom TextView
-class CaptionTextView:UITextView{
+class InputTextView:UITextView{
     // MARK: - Properties
     let placeHolderLabel: UILabel = {
         let label = UILabel()
@@ -23,7 +23,7 @@ class CaptionTextView:UITextView{
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         // Because CaptionTextView is already subclass of UIView
-        backgroundColor = .blue
+//        backgroundColor = .
         font = UIFont.systemFont(ofSize: 16)
         isScrollEnabled = false
         heightAnchor.constraint(equalToConstant: 100).isActive = true
