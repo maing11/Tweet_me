@@ -116,8 +116,6 @@ class ProfileController: UICollectionViewController {
             
             self.user.stats = stats
             self.collectionView.reloadData()
-//            print("DEBUG: User has  \(stats.followers) followers")
-//            print("DEBUG: User is following \(stats.following) people")
         }
     }
     
@@ -200,18 +198,29 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 
 
 // MARK: - ProfileHeaderDelegate
+
 extension ProfileController: ProfileHeaderDelegate {
     func didSelect(filter: ProfileFilterOption) {
         self.selectedFilter = filter
     }
     
     func handleEditProfileFollow(_ header: ProfileHeader) {
-//        print("DEBUG: User is followed is \(user.isFollowed) before button tap")
-        
         if user.isCurrentUser {
-            print("DEBUG: Show edit profile controller")
+            let controller = EditProfileController(user: user)
+            
+            // Set the delegate on the editProfileController
+            controller.delegate = self
+            
+            let nav = UINavigationController(rootViewController: controller)
+            nav.modalPresentationStyle = .fullScreen
+            present(nav,animated: true, completion:  nil)
             return
+        
         }
+//        if user.isCurrentUser {
+//            print("DEBUG: Show edit profile controller")
+//            return
+//        }
         if user.isFollowed {
             UserService.shared.unfollowUser(uid: user.uid) { (ref, err) in
                 self.user.isFollowed = false
@@ -229,9 +238,20 @@ extension ProfileController: ProfileHeaderDelegate {
             }
         }
     }
-    
     func handleDissmissal() {
         navigationController?.popViewController(animated: true)
+    }
+
+}
+
+// MARK: - EditProfileControllerDelegate
+extension ProfileController: EditProfileControllerDelegate {
+    func controller(_ controller: EditProfileController, wantsToUpdate user: User) {
+        controller.dismiss(animated: true, completion: nil)
+        // Reset our user && reload the collectionview to update everything in collection view in the profle controller
+        self.user = user
+        print(user.bio)
+        self.collectionView.reloadData()
     }
     
     
