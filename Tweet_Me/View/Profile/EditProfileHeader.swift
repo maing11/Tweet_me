@@ -45,7 +45,7 @@ class EditProfileHeader: UIView{
     init(user: User) {
         self.user = user
         super.init(frame: .zero)
-        backgroundColor = .red
+        backgroundColor = .twitterBlue
         
         
         
